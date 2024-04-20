@@ -1,41 +1,24 @@
-import { useState } from 'react'
-import { ThemeProvider } from 'styled-components'
+import { useRoutes } from 'react-router-dom';
+import Users from './components/Users'
+import NotFound from './components/NotFound'
+import { Toaster } from "react-hot-toast"
 
-import Main from './components/Main'
-import ToggleTheme from './components/ui/ToggleTheme'
-import QuizProvider from './context/QuizProvider'
-import { GlobalStyles } from './styles/Global'
-import { themes } from './styles/Theme'
+const MyComponent: React.FC = () => {
 
-function App() {
-  const [currentTheme, setCurrentTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme')
-    return savedTheme || 'light'
-  })
-
-  const toggleTheme = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked } = e.target
-    setCurrentTheme(checked ? 'dark' : 'light')
-    localStorage.setItem('theme', checked ? 'dark' : 'light')
-  }
-
-  const theme = currentTheme === 'light' ? themes.light : themes.dark
-
-  return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <QuizProvider>
-        <ToggleTheme
-          onChange={toggleTheme}
-          currentTheme={currentTheme}
-          checked={currentTheme === 'dark'}
-          id="toggleTheme"
-          value="theme"
+    const routes = useRoutes([
+      { path: '/', element: <Users /> },
+      { path: '*', element: <NotFound /> }
+    ]);
+    return (
+      <main>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
         />
-        <Main />
-      </QuizProvider>
-    </ThemeProvider>
-  )
-}
 
-export default App
+        {routes}
+      </main>
+    );
+  };
+
+  export default MyComponent;
